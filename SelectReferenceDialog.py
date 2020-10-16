@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QDialog, QPushButton, QFileDialog,QGridLayout, QTableWidget, QTableWidgetItem
 from  PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QRect,Qt
@@ -57,12 +57,36 @@ class ShowRefForUpdate(QDialog):
         self.fh = FieldHelper(self)
         self.rw = RefWorker()
         #Set title
-        self.setWindowTitle(refname)
+        self.setWindowTitle(self.refname)
         self.setWindowIcon(QtGui.QIcon("icon\Plague_Inc._logo.png"))
-        reflist = self.rw.getRefByName(reffile)
-        self.table = self.fh.get_table_from_list(reflist, refname, self.saveRef)
+        self.reflist = self.rw.getRefByName(self.reffile)
+        self.table = self.fh.get_table_from_list(self.reflist, self.refname, self.saveRef)
+        # add grid with patients
+        self.grid_layout = QGridLayout()
 
+        self.table.resizeColumnsToContents()
+        self.grid_layout.addWidget(self.table)
+        #geo = QRect(self.left - 30, self.top + 30, self.width - 10, self.height - 10)
+        #self.grid_layout.setGeometry(geo)
+        self.setLayout(self.grid_layout)
+        # add print button
+        button_Print = QPushButton("Удалить строку", self)
+        button_Print.setShortcut("Ctrl+D")
+        button_Print.setShortcut("Delete")
+        geo_but_prt = QRect(1450, 30, 150, 30)
+        button_Print.setGeometry(geo_but_prt)
+        button_Print.clicked.connect(self.removeRow)
+
+    def removeRow(self):
+        curRow = self.table.currentRow()
+        self.table.removeRow(curRow)
+        del self.reflist[curRow]
+        self.rw.SaveRef(self.reffile, self.reflist)
 
     def saveRef(self):
-        pass
-
+        send = self.sender()
+        RowNum = send.currentRow()
+        item = send.item(RowNum, 0)
+        value = item.text()
+        self.reflist[RowNum] = value
+        self.rw.SaveRef(self.reffile,self.reflist)
