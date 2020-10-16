@@ -164,7 +164,7 @@ class FieldHelper():
         return doctor
 
     def get_table_from_list(self,list_ref,name, action = None):
-        self.table = QTableWidget(self)
+        self.table = QTableWidget(self.parent)
         i=0
         a = 0
         self.table.insertRow(i)

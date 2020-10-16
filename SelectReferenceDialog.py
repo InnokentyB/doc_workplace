@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QRect,Qt
 
 from DbWorker import RefWorker
-from FieldHelper import
+from FieldHelper import FieldHelper
 
 class SelectReferenceDialog(QDialog):
 
@@ -52,11 +52,17 @@ class ShowRefForUpdate(QDialog):
         self.left = 50
         self.width = 1200
         self.height = 900
-
+        self.reffile = reffile
+        self.refname = refname
+        self.fh = FieldHelper(self)
+        self.rw = RefWorker()
         #Set title
         self.setWindowTitle(refname)
         self.setWindowIcon(QtGui.QIcon("icon\Plague_Inc._logo.png"))
+        reflist = self.rw.getRefByName(reffile)
+        self.table = self.fh.get_table_from_list(reflist, refname, self.saveRef)
 
-    def table(self):
-        self.table = QTableWidget(self)
+
+    def saveRef(self):
+        pass
 
