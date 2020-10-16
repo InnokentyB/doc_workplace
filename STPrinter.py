@@ -237,23 +237,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         return path
 
-'''
-    def new_db_path_dialog(self):
-        self.new_db_path = QFileDialog()
-        self.new_db_path.setFileMode(2)
-        self.new_db_path.setLabelText("Выбор пути размещения файла данных")
-        self.new_db_path.setOption(QFileDialog.ShowDirsOnly, True)
-        if self.new_db_path.exec_() == QDialog.Accepted:
-            path = self.new_db_path.selectedFiles()[0]  # returns a list
-        else:
-            MB = QMessageBox()
-            MB.setWindowTitle("Ошибка выбора файла")
-            MB.setText("Для работы приложения необходимо указать путь для размещения файла базы данных")
-            MB.setIcon(QMessageBox.Critical)
-            x = MB.exec_()
-            raise FileNotFoundError("Для работы приложения необходимо указать путь для размещения файла базы данных")
-        return path
-  '''
 #Run the app
 app = QtWidgets.QApplication(sys.argv)
 window = Ui_MainWindow()
