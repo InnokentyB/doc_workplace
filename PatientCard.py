@@ -19,11 +19,12 @@ class Patient(QtWidgets.QMainWindow):
     STATUS_NEW = 'Создание'
     STATUS_EDIT = 'Изменение'
 
-    def __init__(self,patlist, id = '' ):
+    def __init__(self,patlist, id = '', copy = False):
         super().__init__()
         #field init
         self.num_card = id
         self.field_init()
+        self.copy = copy
 
         #DB init from list
         self.patlist = patlist
@@ -158,11 +159,17 @@ class Patient(QtWidgets.QMainWindow):
         button_Print= QPushButton("Печать стат талона", self)
         geo_but_prt = QRect(450, 30, 150, 30)
         button_Print.setGeometry(geo_but_prt)
+        # add copy button
+        button_Copy = QPushButton("Копировать", self)
+        geo_but_prt = QRect(650, 30, 150, 30)
+        button_Copy.setGeometry(geo_but_prt)
 
         #connect buttons to actions
         button.clicked.connect(self.save_patient)
         button_Cancel.clicked.connect(self.close)
         button_Print.clicked.connect(self.print_ST)
+        button_Copy.clicked.connect(self.copyPatient)
+
 
 
     def setup_card_fields(self):
@@ -467,8 +474,15 @@ class Patient(QtWidgets.QMainWindow):
         self.DS_concom3 = patient.get("DS_concom3")
         self.DS_concom3_code = patient.get("DS_concom3_code")
         self.DS_Type = patient.get("DS_Type")
-        self.Visit_Date = patient.get("Visit_Date")
-        self.Close_Date = patient.get("Close_Date")
+        if not self.copy:
+            self.Visit_Date = patient.get("Visit_Date")
+        else:
+            self.Visit_Date = ""
+
+        if not self.copy:
+            self.Close_Date = patient.get("Close_Date")
+        else:
+            self.Close_Date = ""
         self.DS_for_journal = patient.get("DS_for_journal")
         self.Notes = patient.get("Notes")
         self.Appointments = patient.get("Appointments")
@@ -477,7 +491,10 @@ class Patient(QtWidgets.QMainWindow):
         self.DS_concom3_for_journal = patient.get("DS_concom3_for_journal_filed")
         self.Address_full = patient.get("Address_full")
         self.DS_for_journal_full = patient.get("DS_for_journal_full")
-        self.Num_visit = patient.get("Num_visit")
+        if not self.copy:
+            self.Num_visit = patient.get("Num_visit")
+        else:
+            self.Num_visit = self.default.get("Num_visit")
         self.Visit_type = patient.get("Visit_type")
         self.Polis_Series = patient.get("Polis_Series")
         self.Polis_Num = patient.get("Polis_Num")
@@ -545,13 +562,13 @@ class Patient(QtWidgets.QMainWindow):
         patient["Polis_Num"] = self.Polis_Num_filed.text()
         patient["SMO"] = self.SMO_filed.text()
 
-        if not self.num_card:
+        if not self.num_card or self.copy:
             self.num_card = 'new'#str(int(list(patients.keys())[-1]) + 1)
         #save patint to DB
         self.num_card = self.DB.save_patient(patient,self.num_card)
         #refresh layout to update data in list view
         self.patlist.updatelist()
-        if self.state == self.STATUS_NEW:
+        if self.state == self.STATUS_NEW or self.copy:
             self.default["Num_visit"] = int(self.Num_visit)+1
             self.DW.save(self.default)
         self.hide()
@@ -773,3 +790,6 @@ class Patient(QtWidgets.QMainWindow):
         if isinstance(send, QLineEdit):
             self.refDb.add_SMO(send.text())
 
+    def copyPatient(self):
+        copyPatient = Patient(self.patlist,self.num_card,True)
+        self.close()
