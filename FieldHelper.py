@@ -1,6 +1,6 @@
 from  PyQt5.QtCore import QDate, Qt, QRect
 from PyQt5.QtWidgets import ( QLineEdit, QDateEdit,QLabel, QCalendarWidget, QListWidget, QComboBox, QGroupBox,
-                              QCompleter, QPlainTextEdit, QRadioButton, QButtonGroup)
+                              QCompleter, QPlainTextEdit, QRadioButton, QButtonGroup, QTableWidget, QTableWidgetItem,)
 from PyQt5.QtGui import QFont
 
 
@@ -162,3 +162,17 @@ class FieldHelper():
         doctor = self.refDb.get_doc_by_id(id)
         doctor = self.format_doc_to_field(id ,doctor)
         return doctor
+
+    def get_table_from_list(self,list_ref,name, action = None):
+        self.table = QTableWidget(self)
+        i=0
+        a = 0
+        self.table.insertRow(i)
+        self.table.setItem(i - 1, a, QTableWidgetItem(name))
+        i+=1
+        for str in list_ref:
+            self.table.setItem(i, a, QTableWidgetItem(str))
+            i += 1
+        if action:
+            self.table.currentCellChanged.connect(action)
+        return self.table
