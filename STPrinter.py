@@ -30,19 +30,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.height = 900
         self.new_db = False
         #before start we need to check config file and DB path
-        '''
-        filename = "config.json"
-        try:
-            with open(filename, 'r', encoding="utf-8") as patient_file:
-                config = json.load(patient_file, encoding='utf-8')
-                self.dbpath = config.get("dbpath")
-                if config.get("new_db") == "True":
-                    self.new_db = True
-                elif not os.path.exists(self.dbpath):
-                    self.dbpath = self.db_file_dialog()
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Config file {filename} is not found in app root directory")
-        '''
+
         self.DB = DbWorker()
         #if self.new_db:
            # new_path = self.new_db_path_dialog()
