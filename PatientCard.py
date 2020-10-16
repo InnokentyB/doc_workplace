@@ -157,6 +157,7 @@ class Patient(QtWidgets.QMainWindow):
 
         # add print button
         button_Print= QPushButton("Печать стат талона", self)
+        button_Print.setShortcut("Ctrl+P")
         geo_but_prt = QRect(450, 30, 150, 30)
         button_Print.setGeometry(geo_but_prt)
         # add copy button
@@ -192,7 +193,7 @@ class Patient(QtWidgets.QMainWindow):
         fsize,label_margin = 2,2
 
         self.Visit_Date_filed = self.FH.add_date_field("Дата посещения", self.vheight * 50, left, self.Visit_Date,
-                                                    default_value=QDate.currentDate(), readonly=True,label_margin=label_margin,field_size=fsize)
+                                                    default_value=QDate.currentDate(), readonly=False,label_margin=label_margin,field_size=fsize)
         left += (fsize + label_margin + self.mrg)
         fsize,label_margin = 2,3
         self.Num_visit_filed = self.FH.add_line_field("Номер посещения", self.vheight * 50, left, str(self.Num_visit),label_margin=label_margin,field_size=fsize)
