@@ -261,6 +261,14 @@ class RefWorker():
             else:
                 return False
 
+    def getRefByName(self, refName):
+        with open('data\\'+refName, 'r', encoding="utf-8") as file:
+            self.ref = json.load(file, encoding='utf-8')
+        return list(self.ref)
+
+    def SaveRef(self,refName, reflist):
+        with open('data\\'+refName, 'w', encoding="utf-8") as file:
+            json.dump(reflist, file)
 
 class ViewWorker(): #гуглить контейнер зависимостей
     def __init__(self):

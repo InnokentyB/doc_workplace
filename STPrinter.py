@@ -10,6 +10,7 @@ from DbWorker import DbWorker, RefWorker, ViewWorker, DefaultWorker
 from PatientCard import Patient
 from DefaultDialog import DefaultvalueDialog
 from JournalPrinter import print_journal
+from SelectReferenceDialog import SelectReferenceDialog
 import os
 import datetime
 import subprocess
@@ -88,6 +89,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         geo_but_journal  = QRect(580, 30, 150, 30)
         button_journal.setGeometry(geo_but_journal)
         button_journal.clicked.connect(self.print_journal)
+
+        # add update ref button
+        button_ref = QPushButton("Справочники", self)
+        geo_but_ref = QRect(880, 30, 150, 30)
+        button_ref.setGeometry(geo_but_ref)
+        button_ref.clicked.connect(self.references)
 
         if self.DB.check_need_field_update():
             leftmargin += 200
@@ -236,6 +243,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 x = MB.exec_()
 
         return path
+
+    def references(self):
+        References = SelectReferenceDialog()
+        References.setModal(True)
+        References.exec()
 
 #Run the app
 app = QtWidgets.QApplication(sys.argv)
